@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>About</h1>
+<div id="map"></div>
+<style>
+    #map {
+        height: 480px;
+    }
+</style>
+<script>
+    let map = L.map('map').setView([52.5197, 13.4080], 5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    let marker = L.marker([51.5, -0.09]).addTo(map);
+    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    {% for post in posts %}
+    {% set location = post.lat + ',' + post.lng %}
+    marker = L.marker([{{ location }}]).addTo(map);
+    marker.bindPopup("<b>{{ post.title }}</b><br>I am a popup.").openPopup();
+
+    {% endfor %}
+</script>
+{% endblock content %}
