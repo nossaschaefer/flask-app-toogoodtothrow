@@ -1,5 +1,7 @@
 import os
 import secrets
+import googlemaps
+from geopy.geocoders import Nominatim
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from flaskblog import app, db, bcrypt, mail
@@ -8,6 +10,8 @@ from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
+# Initialize the Google Maps client with your API key
+gmaps = googlemaps.Client(key='AIzaSyAOXgSAauoz0a796SXeqzGLVbk4Up1UQe4')
 
 @app.route("/")
 @app.route("/home")
@@ -17,9 +21,20 @@ def home():
     return render_template('home.html', posts=posts)
 
 
-@app.route("/about")
+@app.route('/about')
 def about():
-    return render_template('about.html', title='About')
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+    for post in posts: 
+        print(f'Latitude: {post.lat}, Longitude: {post.lon}')
+    lat = 52.4853394 
+    lon = 13.425923
+    print(f'Latitude: {lat}, Longitude: {lon}')
+    return render_template('about.html', lat=lat, lon=lon, posts=posts)
+
+
+
+
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -113,10 +128,25 @@ def save_picture(form_picture, folder='profile_pics'):
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
+        # Get the address from the form
+        address = form.address.data
+
+        # Geocode the address using Google Maps API
+        geocode_result = gmaps.geocode(address)
+
+        if geocode_result:
+            lat = geocode_result[0]['geometry']['location']['lat']
+            lon = geocode_result[0]['geometry']['location']['lng']
+        else:
+            lat = lon = None  # Handle case if geocoding fails
+    if form.validate_on_submit():
         picture_file = None
         if form.picture.data:
          picture_file = save_picture(form.picture.data, folder='post_pics')  
-        post = Post(title=form.title.data, content=form.content.data, image_file=picture_file, author=current_user)
+
+      
+
+        post = Post(title=form.title.data, content=form.content.data, image_file=picture_file, author=current_user, address=form.address.data, lat=lat, lon=lon)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -139,8 +169,21 @@ def update_post(post_id):
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
+        address = form.address.data
+
+        # Geocode the address using Google Maps API
+        geocode_result = gmaps.geocode(address)
+
+        if geocode_result:
+            lat = geocode_result[0]['geometry']['location']['lat']
+            lon = geocode_result[0]['geometry']['location']['lng']
+        else:
+            lat = lon = None  # Handle case if geocoding fails
         post.title = form.title.data
         post.content = form.content.data
+        post.lon = lon
+        post.lat = lat
+        post.address = address
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('post', post_id=post.id))

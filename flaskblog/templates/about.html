@@ -1,26 +1,41 @@
 {% extends "layout.html" %}
+
 {% block content %}
-<h1>About</h1>
-<div id="map"></div>
-<style>
-    #map {
-        height: 480px;
-    }
-</style>
+<!-- Google Maps Map Container -->
+<div id="map" style="height: 480px;"></div>
+
 <script>
-    let map = L.map('map').setView([52.5197, 13.4080], 5);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    function initMap() {
+        // Retrieve the lat and lng values from the template context
+        const lat = {{ lat }};
+        const lng = {{ lon }};
+        
+    // Debugging - Log the values to the console
+    console.log("Latitude:", lat, "Longitude:", lng);
 
-    let marker = L.marker([51.5, -0.09]).addTo(map);
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    // Initialize the map
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: lat, lng: lng },
+        zoom: 12,
+    });
+
+    // adds a marker
+    new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        title: "Location",
+    });
     {% for post in posts %}
-    {% set location = post.lat + ',' + post.lng %}
-    marker = L.marker([{{ location }}]).addTo(map);
-    marker.bindPopup("<b>{{ post.title }}</b><br>I am a popup.").openPopup();
-
+    console.log("Latitude:", {{post.lat}}, "Longitude:", {{post.lon}});
+    new google.maps.Marker({
+        position: { lat: {{post.lat}}, lng: {{post.lon}} },
+        map: map,
+        title: "Location",
+    });
     {% endfor %}
+    }
 </script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOXgSAauoz0a796SXeqzGLVbk4Up1UQe4&callback=initMap" async
+    defer></script>
 {% endblock content %}
