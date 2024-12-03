@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
@@ -20,7 +23,10 @@
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
             <!-- <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top"> -->
             <div class="container-fluid">
+                <img src="{{ url_for('static', filename='logo/NOSSA TOO GOOD TO THROW_LOGO CHAIR_yellow flipped.png') }}" class="logo">
+
                 <a class="navbar-brand mr-4" href="/">ToGoodToThrow</a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
                     aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,7 +35,7 @@
                     <!-- Navbar Left Side-->
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
-                        <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
+                        <a class="nav-item nav-link" href="{{ url_for('about') }}">Map</a>
                     </div>
                     <!-- Navbar Right Side -->
                     <div class="navbar-nav ms-auto">

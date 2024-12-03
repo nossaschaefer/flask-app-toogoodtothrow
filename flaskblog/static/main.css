@@ -1,7 +1,8 @@
 body {
-  background: #fafafa;
-  color: #333333;
+  background-color: #e6e0ed;
+  color: black;
   margin-top: 5rem;
+  font-family: "Parkinsans", sans-serif;
 }
 
 h1,
@@ -10,15 +11,15 @@ h3,
 h4,
 h5,
 h6 {
-  color: #444444;
+  color: black;
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: black;
 }
 
 .site-header .navbar-nav .nav-link {
-  color: #cbd5db;
+  color: #e6e0ed;
 }
 
 .site-header .navbar-nav .nav-link:hover {
@@ -29,21 +30,25 @@ h6 {
   font-weight: 500;
 }
 
+.navbar-nav {
+  align-items: self-end;
+}
+
 .content-section {
   background: #ffffff;
   padding: 10px 20px;
   border: 1px solid #dddddd;
   border-radius: 3px;
-  margin-bottom: 20px;
+  
 }
 
 .article-title {
-  color: #444444;
+  color: black;
   text-decoration: none;
 }
 
 a.article-title:hover {
-  color: #428bca;
+  color: #89c4fa;
   text-decoration: none;
 }
 
@@ -52,15 +57,19 @@ a.article-title:hover {
 }
 
 .article-img {
-  max-height: 20px;
-  max-width: 20px;
-  margin-right: 16px;
+  max-height: 30px;
+  aspect-ratio: 1;
+  margin-bottom: 16px;
+  object-fit: cover;
+  margin-top: 10px;
+  border: solid black 1.5px;
+  border-radius: 7px;
 }
 
 .article-metadata {
   padding-bottom: 1px;
   margin-bottom: 4px;
-  border-bottom: 1px solid #e3e3e3;
+  
 }
 
 .article-metadata a:hover {
@@ -75,10 +84,13 @@ a.article-title:hover {
 }
 
 .account-img {
-  height: 125px;
-  width: 125px;
-  margin-right: 20px;
+  height: 80px;
+  width: 80px;
   margin-bottom: 16px;
+  object-fit: cover;
+  margin-top: 20px;
+  border: solid black 1.5px;
+  border-radius: 23px;
 }
 
 .account-heading {
@@ -98,4 +110,274 @@ a:hover {
   object-fit: cover;
   height: 200px;
   width: 100%;
+  background-color: #cba7f5;
+  border-radius: 20px;
+}
+
+.form-group {
+  margin-top: 20px;
+}
+
+.content-section {
+  text-align: center;
+  background-color: #cba7f5;
+  border: solid 1px black;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+input#file-upload-button {
+  background-color: white !important;
+}
+
+.form-control-lg {
+  border: solid black 1px;
+  font-size: 15px;
+}
+
+.btn-outline-info {
+  border: solid black 1px;
+  background-color: #ffff04;
+  color: black;
+}
+
+.input#file-upload-button {
+  background-color: white !important;
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+
+
+.img-fluid {
+  border-radius: 7px;
+  border: solid black 1px;
+}
+
+
+.btn-yellow {
+  background-color: #ffff04 !important;
+  border: solid black 1px;
+
+}
+.btn-orange {
+  background-color: #f2713d;
+  border: solid black 1px;
+}
+.text-muted {
+  color: black !important;
+}
+
+.button.navbar-toggler {
+  border: none !important;
+ 
+}
+
+.form-control {
+  border: solid black 1px;
+}
+
+input#picture {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.card-body {
+  border-radius: 20px;
+  background-color: #cba7f5;
+  min-height: 100px;
+  padding: 0rem 1rem;
+  margin-top: 10px;
+}
+
+.btn-info {
+  border: solid black 1px;
+  background-color: #89c4fa;
+}
+
+.card {
+  border-radius: 20px;
+  background-color: #cba7f5;
+  margin-top: 10px;
+  border: solid black 1px;
+}
+
+.btn-info:hover {
+  background-color: #89c4fa;
+}
+
+.btn-outline-info:hover {
+  background-color: #89c4fa;
+}
+
+.navbar-dark {
+  border: none !important;
+}
+
+.navbar-toggler {
+  border: none !important;
+}
+.button:focus:not(:focus-visible) {
+  border: none !important;
+}
+.collapsed {
+  border: none !important;
+}
+
+.navbar-toggler .collapsed {
+  border: none !important;
+}
+
+input#username {
+  text-align: center;
+  
+}
+input#email {
+  text-align: center;
+}
+
+.navbar-brand {
+  margin-right: 0;
+}
+
+img.account-img.img-fluid {
+  border-radius: 20px;
+}
+img.img-fluid {
+margin-top: 10px;
+}
+
+.navbar-dark .navbar-brand {
+  margin-left: 10px;
+}
+
+a.navbar-brand.mr-4 {
+  margin-right: 10px;
+  color: #cba7f5;
+}
+
+@media screen and (max-width: 767px) {
+  
+  .home-distance {
+    text-align: right;
+    margin-top: 2rem;
+    align-self: end;
+    
+  }
+
+
+}
+
+@media screen and (min-width: 768px) {
+  margin-top: 0rem;
+}
+
+.img-thumbnail {
+  background-color: transparent !important;
+  max-height: 50px;
+  border: none;
+  aspect-ratio: 1;
+}
+
+.post-thumbnail {
+  background-color: transparent !important;
+  max-height: 30px;
+  border: none;
+  aspect-ratio: 1;
+  align-self: end;
+  margin-bottom: 22px;
+}
+
+.state-group {
+  margin-top: 40px;
+  margin-bottom: 30px;
+}
+
+.dist-thumbnail-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+input[type="radio"] {
+  border: 4px solid black; /* Adjust thickness here */
+  border-radius: 50%; /* Keeps the round shape */
+  width: 20px; /* Adjust size if needed */
+  height: 20px; /* Adjust size if needed */
+  position: absolute; /* Positions the radio button on top of images */
+  opacity: 0; /* Hides the default radio button */
+}
+
+input[type="radio"]:checked + img {
+  border: 3px solid black; /* Border for selected state */
+  border-radius: 50%; /* Keeps image border rounded */
+  box-shadow: 0 0 0 3px black; /* Highlight for selected image */
+}
+
+label {
+  position: relative;
+  display: inline-block;
+  margin-right: 15px;
+}
+
+label img {
+  width: 50px; /* Adjust size of the image */
+  height: 50px; /* Adjust size of the image */
+  border-radius: 50%; /* Round the image */
+  transition: all 0.3s ease; /* Smooth transition effect */
+}
+
+.postinfo-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+a.mr-2 {
+  margin-inline: 5px;
+}
+
+.home-distance-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alert.alert-success {
+  background-color: #ffff04;
+  color: black;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  border: solid black 1px;
+  border-radius: 10px;
+}
+
+.hood {
+  align-self: end;
+}
+
+.state-filter {
+  display: flex;
+  margin-top: 4px;
+  
+}
+
+img.img-thumbnail {
+  max-width: 30px;
+  
+}
+
+p.image-label {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+p.image-label {
+  font-size: 13px;
 }

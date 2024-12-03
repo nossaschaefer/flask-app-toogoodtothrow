@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, FileField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, FileField, RadioField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, InputRequired
 from flaskblog.models import User
 
 
@@ -61,6 +61,8 @@ class PostForm(FlaskForm):
     picture = FileField('Add Picture', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
     address = StringField('Address', validators=[DataRequired()])  # Add this line to accept the address input
     submit = SubmitField('Post')
+    image_choice = RadioField('Choose an image', choices=[('image1', 'Image 1'), ('image2', 'Image 2'), ('image3', 'Image 3')], validators=[InputRequired()])
+
 
 
 class RequestResetForm(FlaskForm):

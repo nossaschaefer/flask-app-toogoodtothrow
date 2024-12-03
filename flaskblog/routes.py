@@ -4,33 +4,59 @@ import googlemaps
 from geopy.geocoders import Nominatim
 from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
-from flaskblog import app, db, bcrypt, mail
+from flaskblog import app, db, bcrypt, mail, API_KEY
 from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, RequestResetForm, ResetPasswordForm
 from flaskblog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from geopy.distance import geodesic
 
 # Initialize the Google Maps client with your API key
-gmaps = googlemaps.Client(key='AIzaSyAOXgSAauoz0a796SXeqzGLVbk4Up1UQe4')
+gmaps = googlemaps.Client(key=API_KEY)
 
 @app.route("/")
 @app.route("/home")
 def home():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+    
+    lat = 52.4853394
+    lon = 13.425923
+    user_location = (lat, lon)
+    
+    # Calculate distance for each post
+    for post in posts.items:
+        post.distance = round(geodesic(user_location, (post.lat, post.lon)).km, 2)
+    
     return render_template('home.html', posts=posts)
+
+
+
+
 
 
 @app.route('/about')
 def about():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
-    for post in posts: 
-        print(f'Latitude: {post.lat}, Longitude: {post.lon}')
+    post_data = [{'lat': post.lat, 'lon': post.lon, 'title': post.title, 'id': post.id, 'image': post.image_file} for post in posts.items]
+    
     lat = 52.4853394 
     lon = 13.425923
+    user_location = (lat, lon)  # User's location
+    
+    distance_data = []
+    
+    for post in post_data:
+        post_location = (post['lat'], post['lon'])
+        distance = geodesic(user_location, post_location).km  # Calculate distance using geopy
+        post['distance'] = round(distance, 2)
+        distance_data.append(post)
+
+    api_key = API_KEY
     print(f'Latitude: {lat}, Longitude: {lon}')
-    return render_template('about.html', lat=lat, lon=lon, posts=posts)
+    return render_template('about.html', lat=lat, lon=lon, posts=distance_data, postData=post_data)
+
 
 
 
@@ -137,28 +163,65 @@ def new_post():
         if geocode_result:
             lat = geocode_result[0]['geometry']['location']['lat']
             lon = geocode_result[0]['geometry']['location']['lng']
+            short_name = geocode_result[0]['address_components'][2]['short_name']
+
         else:
             lat = lon = None  # Handle case if geocoding fails
-    if form.validate_on_submit():
+      
+        # Handle the uploaded picture
         picture_file = None
         if form.picture.data:
-         picture_file = save_picture(form.picture.data, folder='post_pics')  
+            picture_file = save_picture(form.picture.data, folder='post_pics')
 
-      
+        # Fallback to the image_choice if no file is uploaded
+        if not picture_file:
+            if form.image_choice.data == 'image1':
+                picture_file = 'path_to_image1.png'
+            elif form.image_choice.data == 'image2':
+                picture_file = 'path_to_image2.png'
+            elif form.image_choice.data == 'image3':
+                picture_file = 'path_to_image3.png'
+            else:
+                picture_file = None  # Default or no image
 
-        post = Post(title=form.title.data, content=form.content.data, image_file=picture_file, author=current_user, address=form.address.data, lat=lat, lon=lon)
+        post = Post(
+            title=form.title.data,
+            content=form.content.data,
+            image_file=picture_file,  # Updated to use picture_file
+            image_choice=form.image_choice.data,  # Stores the choice (image1, image2, or image3)
+            author=current_user,
+            address=form.address.data,
+            lat=lat,
+            lon=lon,
+            short_name=short_name
+        )
+
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('home'))
+    
     return render_template('create_post.html', title='New Post', form=form)
+
 
 
 
 @app.route("/post/<int:post_id>")
 def post(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
+    
+    # Reference location (e.g., user's location)
+    user_location = (52.4853394, 13.425923)  # Example coordinates
+    
+    # Post location
+    post_location = (post.lat, post.lon)
+    
+    # Calculate distance
+    distance = geodesic(user_location, post_location).km  # in kilometers
+    post_distance = round(distance, 2)  # rounded to 2 decimal places
+    
+    return render_template('post.html', title=post.title, post=post, post_distance=post_distance)
+
 
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
@@ -177,13 +240,17 @@ def update_post(post_id):
         if geocode_result:
             lat = geocode_result[0]['geometry']['location']['lat']
             lon = geocode_result[0]['geometry']['location']['lng']
+            short_name = geocode_result[0]['address_components'][2]['short_name']
+
         else:
             lat = lon = None  # Handle case if geocoding fails
+            short_name = None
         post.title = form.title.data
         post.content = form.content.data
         post.lon = lon
         post.lat = lat
         post.address = address
+        post.short_name = short_name
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('post', post_id=post.id))
@@ -254,3 +321,19 @@ def reset_token(token):
         flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
+
+@app.route("/post/quality/<int:quality_id>", methods=['GET'])
+def quality(quality_id):
+    search_quality = f'image{quality_id}'
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.filter(Post.image_choice==search_quality).order_by(Post.date_posted.desc()).paginate(page=page, per_page=7)
+   
+    lat = 52.4853394
+    lon = 13.425923
+    user_location = (lat, lon)
+    
+    # Calculate distance for each post
+    for post in posts.items:
+        post.distance = round(geodesic(user_location, (post.lat, post.lon)).km, 2)
+    return render_template('home.html', posts=posts)
+

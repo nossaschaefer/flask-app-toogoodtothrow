@@ -4,6 +4,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'

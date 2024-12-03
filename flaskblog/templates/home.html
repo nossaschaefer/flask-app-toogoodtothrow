@@ -2,6 +2,23 @@
 {% block content %}
 
 <div class="row">
+    <div class="form-group state-filter text-center">
+      
+        
+           
+            <a href="/post/quality/1">
+            <img src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA SUPER.png') }}" alt="Image 1" class="img-thumbnail">
+            <p class="image-label">Great</p> 
+        </a> 
+            <a href="/post/quality/2">
+            <img src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA OK_BLUE.png') }}" alt="Image 2" class="img-thumbnail">
+            <p class="image-label">OK</p> 
+            </a>
+            <a href="/post/quality/3">
+            <img src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA REPAIR_ORANGE.png') }}" alt="Image 3" class="img-thumbnail">
+            <p class="image-label">Broken</p> 
+            </a>
+    </div>
     {% for post in posts.items %}
     <div class="col-sm-6 col-md-3 col-lg-4 mb-2">
 
@@ -13,14 +30,31 @@
                 {% endif %}
                 <div class="card-body">
                     <h4 class="card-title">{{ post.title }}</h4>
-                    <!-- <p class="card-text">{{ post.content }}</p> -->
+                    <div class="home-distance-container">
 
-                </div>
+                        {% if post.image_choice %}
+                        
+                            {% if post.image_choice == 'image1' %}
+                <img class="post-thumbnail" src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA SUPER.png') }}" alt="Selected Image">
+            {% elif post.image_choice == 'image2' %}
+                <img class="post-thumbnail" src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA OK_BLUE.png') }}" alt="Selected Image">
+            {% elif post.image_choice == 'image3' %}
+                <img class="post-thumbnail" src="{{ url_for('static', filename='state_pics/NOSSA TOO GOOD TO THROW_CARA REPAIR_ORANGE.png') }}" alt="Selected Image">
+            {% endif %}
+                        
+                        {% endif %}
+                        {% if post.short_name %}
+                        <p class="hood">{{ post.short_name.replace('Bezirk ', '') }}</p>
+                        {% endif %}
+                        <p class="home-distance">{{ post.distance }} km</p>
+                    </div>
+                    </div>
             </div>
         </a>
     </div>
 
     {% endfor %}
+    
 </div>
 
 
@@ -28,7 +62,7 @@
 {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
 {% if page_num %}
 {% if posts.page == page_num %}
-<a class="btn btn-info mb-4 mt-3" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+<a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
 {% else %}
 <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
 {% endif %}
