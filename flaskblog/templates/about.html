@@ -7,8 +7,7 @@
 <script>
     function initMap() {
         // Retrieve the lat and lng values from the template context
-        const lat = {{ lat }
-    };
+        const lat = {{ lat }};
     const lng = {{ lon }};
 
     // Debugging - Log the values to the console
@@ -57,5 +56,5 @@
     };
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap" async defer></script>
 {% endblock content %}

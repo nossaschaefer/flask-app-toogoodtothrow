@@ -11,6 +11,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 from geopy.distance import geodesic
 
+# API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 # Initialize the Google Maps client with your API key
 gmaps = googlemaps.Client(key=API_KEY)
 

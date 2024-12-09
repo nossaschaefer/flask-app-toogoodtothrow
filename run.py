@@ -3,8 +3,19 @@ from flaskblog import app, db
 from dotenv import load_dotenv
 import os
 
+# Load environment variables from the .env file
 load_dotenv()
-api_key = os.getenv('API_KEY')
+
+# Retrieve the API key from the environment
+API_KEY = os.getenv('API_KEY')
+
+# Initialize Google Maps client with the retrieved API key
+if API_KEY:
+    import googlemaps
+    gmaps = googlemaps.Client(key=API_KEY)
+else:
+    raise ValueError("API Key is missing from environment variables.")
+
 
 
 migrate = Migrate(app, db)
