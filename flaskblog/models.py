@@ -1,5 +1,5 @@
-from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from datetime import datetime, timedelta
+import jwt
 from flaskblog import db, login_manager, app
 from flask_login import UserMixin
 
@@ -16,15 +16,20 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
 
     def get_reset_token(self, expires_sec=1800):
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
-        return s.dumps({'user_id': self.id}).decode('utf-8')
+        # Generate a JWT with expiration
+        payload = {
+            'user_id': self.id,
+            'exp': datetime.now(datetime.timezone.utc) + timedelta(seconds=expires_sec)
+        }
+        token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+        return token
     
     @staticmethod
     def verify_reset_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token)['user_id']
-        except:
+            payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+            user_id = payload['user_id']
+        except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
             return None
         return User.query.get(user_id)
 

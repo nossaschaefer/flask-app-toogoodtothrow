@@ -7,54 +7,55 @@
 <script>
     function initMap() {
         // Retrieve the lat and lng values from the template context
-        const lat = {{ lat }};
-        const lng = {{ lon }};
+        const lat = {{ lat }
+    };
+    const lng = {{ lon }};
 
-        // Debugging - Log the values to the console
-        console.log("Latitude:", lat, "Longitude:", lng);
+    // Debugging - Log the values to the console
+    console.log("Latitude:", lat, "Longitude:", lng);
 
-        // Initialize the map
-        const map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: lat, lng: lng },
-            zoom: 12,
+    // Initialize the map
+    const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: lat, lng: lng },
+        zoom: 12,
+    });
+
+    // Adds a marker
+    let marker = new google.maps.Marker({
+        position: { lat: lat, lng: lng },
+        map: map,
+        title: "Post",  // Static title for the main location marker
+    });
+
+    {% for post in posts %}
+    console.log("Post Title:", "{{ post.title }}");
+    console.log("Latitude:", {{ post.lat }}, "Longitude:", {{ post.lon }});
+    marker = new google.maps.Marker({
+        position: { lat: {{ post.lat }}, lng: {{ post.lon }} },
+        map: map,
+        title: "{{ post.title }}",        
         });
 
-        // Adds a marker
-        let marker = new google.maps.Marker({
-            position: { lat: lat, lng: lng },
-            map: map,
-            title: "Post",  // Static title for the main location marker
-        });
-        
-        {% for post in posts %}
-        console.log("Post Title:", "{{ post.title }}");
-        console.log("Latitude:", {{ post.lat }}, "Longitude:", {{ post.lon }});
-        marker = new google.maps.Marker({
-            position: { lat: {{ post.lat }}, lng: {{ post.lon }} },
-            map: map,
-            title: "{{ post.title }}",        
-        });
-        
-    
-        marker.addListener('click', function() {
+
+    marker.addListener('click', function () {
         new google.maps.InfoWindow({
-		content: `<div>
+            content: `<div>
                 <h3>{{ post.title }}</h3>
                 <a href="/post/{{ post.id }}"><img src="{{ url_for('static', filename='post_pics/' + post.image) }}" alt="{{ post.title }}" style="width: 100px; height: auto;"></a><br>
                 <p>{{ post.distance }} km</p>
                 
               </div>`,
-		map: map,
-		position: { lat: {{ post.lat }}, lng: {{ post.lon }} },
+            map: map,
+            position: { lat: {{ post.lat }}, lng: {{ post.lon }} },
         label: "{{ post.title }}",
         });
        
     	});
 
-    
-        {% endfor %}
+
+    {% endfor %}
     };
 </script>
-   
-<script src="https://maps.googleapis.com/maps/api/js?key=MY_API_KEY&callback=initMap" async defer></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&callback=initMap" async defer></script>
 {% endblock content %}
